@@ -6,3 +6,37 @@
   display: inline-block;
   margin: 5px;
 }
+
+.content-block-title {
+  margin-top: 10px;
+}
+
+.content-block {
+  margin: 0px;
+}
+
+.number {
+  text-align: right;
+  font-size: 32px;
+}
+
+@media all and (min-width: 375px) {
+  /* iPhone 6 */
+  .number {
+    font-size: 42px;
+  }
+}
+
+@media all and (min-width: 414px) {
+  /* iPhone 6 plus */
+  .number {
+    font-size: 48px;
+  }
+}
+
+@media all and (min-width: 768px) {
+  /* iPad */
+  .number {
+    font-size: 64px;
+  }
+}

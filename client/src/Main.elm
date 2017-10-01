@@ -67,8 +67,12 @@ viewStart model =
 viewNumbers : Model -> Html Msg
 viewNumbers model =
     div [ class "page-content" ]
-        [ div [ class "content-block" ]
-            (model.numbers |> List.map viewNumber)
+        [ div [ class "content-block-title" ]
+            [ text "Add these numbers" ]
+        , div [ class "content-block" ]
+            [ div [ class "content-block-inner" ]
+                (model.numbers |> List.map viewNumber)
+            ]
         , div [ class "content-block-title" ]
             [ a
                 [ href "#"
@@ -82,7 +86,7 @@ viewNumbers model =
 
 viewNumber : Int -> Html Msg
 viewNumber n =
-    div []
+    div [ class "number" ]
         [ text (prettyInt n) ]
 
 
@@ -106,7 +110,8 @@ prettyInt n =
 
 
 {-| From <https://github.com/circuithub/elm-string-split/blob/1.0.3/src/String/Split.elm>
-That package hasn't been updated to Elm 0.18 yet, so just copied the function.
+That package hasn't been updated to Elm 0.18 yet, so just copied the function and
+modified to work -- removed ' in var name.
 -}
 chunksOfRight : Int -> String -> List String
 chunksOfRight k s =
@@ -132,7 +137,7 @@ chunksOfRight k s =
 
 
 viewDigitsButtons model =
-    ((List.range 1 6)
+    ((List.range 2 7)
         |> List.map (viewDigitsButton model)
     )
 
