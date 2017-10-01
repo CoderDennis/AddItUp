@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Random exposing (..)
+import String exposing (..)
 
 
 type alias Model =
@@ -19,6 +20,7 @@ type Msg
     | SetNumberCount Int
     | Play
     | SetNumbers (List Int)
+    | StartOver
 
 
 type Screen
@@ -67,12 +69,66 @@ viewNumbers model =
     div [ class "page-content" ]
         [ div [ class "content-block" ]
             (model.numbers |> List.map viewNumber)
+        , div [ class "content-block-title" ]
+            [ a
+                [ href "#"
+                , class "button button-big button-fill"
+                , onClick StartOver
+                ]
+                [ text "Play Again" ]
+            ]
         ]
 
 
+viewNumber : Int -> Html Msg
 viewNumber n =
     div []
-        [ text (toString n) ]
+        [ text (prettyInt n) ]
+
+
+{-| From <https://github.com/avh4/elm-number-format/blob/master/src/Number/Format.elm>
+That package hasn't been updated to Elm 0.18 yet, so just copied the function and
+modified it a bit.
+-}
+prettyInt : Int -> String
+prettyInt n =
+    let
+        ni =
+            abs n
+
+        nis =
+            String.join (String.fromChar ',') (chunksOfRight 3 <| toString ni)
+    in
+        if n < 0 then
+            String.cons '-' nis
+        else
+            nis
+
+
+{-| From <https://github.com/circuithub/elm-string-split/blob/1.0.3/src/String/Split.elm>
+That package hasn't been updated to Elm 0.18 yet, so just copied the function.
+-}
+chunksOfRight : Int -> String -> List String
+chunksOfRight k s =
+    let
+        len =
+            length s
+
+        k2 =
+            2 * k
+
+        chunksOfR s_ =
+            if length s_ > k2 then
+                right k s_ :: chunksOfR (dropRight k s_)
+            else
+                right k s_ :: [ dropRight k s_ ]
+    in
+        if len > k2 then
+            List.reverse (chunksOfR s)
+        else if len > k then
+            dropRight k s :: [ right k s ]
+        else
+            [ s ]
 
 
 viewDigitsButtons model =
@@ -148,6 +204,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        StartOver ->
+            ( { model | screen = Start }, Cmd.none )
 
 
 numberListGenerator : Model -> Generator (List Int)
