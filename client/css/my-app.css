@@ -17,26 +17,27 @@
 
 .number {
   text-align: right;
-  font-size: 32px;
+  font-size: 30px;
+  width: 100%;
 }
 
 @media all and (min-width: 375px) {
   /* iPhone 6 */
   .number {
-    font-size: 42px;
+    font-size: 40px;
   }
 }
 
 @media all and (min-width: 414px) {
   /* iPhone 6 plus */
   .number {
-    font-size: 48px;
+    font-size: 46px;
   }
 }
 
 @media all and (min-width: 768px) {
   /* iPad */
   .number {
-    font-size: 64px;
+    font-size: 68px;
   }
 }

@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, href)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class, href, autofocus, type_, value)
+import Html.Events exposing (onClick, onInput)
 import Random exposing (..)
 import String exposing (..)
 
@@ -12,6 +12,8 @@ type alias Model =
     , digits : Int
     , numberCount : Int
     , numbers : List Int
+    , answer : String
+    , check : Check
     }
 
 
@@ -20,7 +22,15 @@ type Msg
     | SetNumberCount Int
     | Play
     | SetNumbers (List Int)
+    | Answer String
+    | CheckAnswer
     | StartOver
+
+
+type Check
+    = NotChecked
+    | Correct
+    | Incorrect
 
 
 type Screen
@@ -74,14 +84,44 @@ viewNumbers model =
                 (model.numbers |> List.map viewNumber)
             ]
         , div [ class "content-block-title" ]
-            [ a
-                [ href "#"
-                , class "button button-big button-fill"
-                , onClick StartOver
+            [ text "Answer" ]
+        , div [ class "content-block" ]
+            [ div [ class "content-block-inner number" ]
+                [ input
+                    [ class "number"
+                    , type_ "number"
+                    , autofocus True
+                    , onInput Answer
+                    , value model.answer
+                    ]
+                    []
                 ]
-                [ text "Play Again" ]
             ]
+        , div [ class "content-block-title" ]
+            [ (viewCheckButton model) ]
         ]
+
+
+viewCheckButton : Model -> Html Msg
+viewCheckButton model =
+    let
+        ( nextMsg, buttonText ) =
+            case model.check of
+                NotChecked ->
+                    ( CheckAnswer, "Check Answer" )
+
+                Incorrect ->
+                    ( CheckAnswer, "Incorrect, Try Again" )
+
+                Correct ->
+                    ( StartOver, "Correct! Play Again" )
+    in
+        a
+            [ href "#"
+            , class "button button-big button-fill"
+            , onClick nextMsg
+            ]
+            [ text buttonText ]
 
 
 viewNumber : Int -> Html Msg
@@ -210,8 +250,30 @@ update msg model =
             , Cmd.none
             )
 
+        Answer a ->
+            ( { model | answer = a }, Cmd.none )
+
+        CheckAnswer ->
+            let
+                ans =
+                    List.sum model.numbers
+
+                check =
+                    if (toString ans) == model.answer then
+                        Correct
+                    else
+                        Incorrect
+            in
+                ( { model | check = check }, Cmd.none )
+
         StartOver ->
-            ( { model | screen = Start }, Cmd.none )
+            ( { model
+                | screen = Start
+                , answer = ""
+                , check = NotChecked
+              }
+            , Cmd.none
+            )
 
 
 numberListGenerator : Model -> Generator (List Int)
@@ -234,9 +296,11 @@ numberGenerator digits =
 initialModel : Model
 initialModel =
     { screen = Start
-    , digits = 2
-    , numberCount = 2
+    , digits = 7
+    , numberCount = 7
     , numbers = []
+    , answer = ""
+    , check = NotChecked
     }
 
 
