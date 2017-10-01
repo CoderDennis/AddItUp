@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
+import Random exposing (..)
 
 
 type alias Model =
@@ -16,6 +17,8 @@ type alias Model =
 type Msg
     = SetDigits Int
     | SetNumberCount Int
+    | Play
+    | SetNumbers (List Int)
 
 
 type Screen
@@ -25,6 +28,16 @@ type Screen
 
 view : Model -> Html Msg
 view model =
+    case model.screen of
+        Start ->
+            viewStart model
+
+        Numbers ->
+            viewNumbers model
+
+
+viewStart : Model -> Html Msg
+viewStart model =
     div [ class "page-content" ]
         [ div [ class "content-block-title" ]
             [ text "How many digits in each number?" ]
@@ -42,10 +55,24 @@ view model =
             [ a
                 [ href "#"
                 , class "button button-big button-fill"
+                , onClick Play
                 ]
                 [ text "Play" ]
             ]
         ]
+
+
+viewNumbers : Model -> Html Msg
+viewNumbers model =
+    div [ class "page-content" ]
+        [ div [ class "content-block" ]
+            (model.numbers |> List.map viewNumber)
+        ]
+
+
+viewNumber n =
+    div []
+        [ text (toString n) ]
 
 
 viewDigitsButtons model =
@@ -110,6 +137,34 @@ update msg model =
 
         SetNumberCount n ->
             ( { model | numberCount = n }, Cmd.none )
+
+        Play ->
+            ( model, generate SetNumbers (numberListGenerator model) )
+
+        SetNumbers numbers ->
+            ( { model
+                | numbers = numbers
+                , screen = Numbers
+              }
+            , Cmd.none
+            )
+
+
+numberListGenerator : Model -> Generator (List Int)
+numberListGenerator model =
+    list model.numberCount (numberGenerator model.digits)
+
+
+numberGenerator : Int -> Generator Int
+numberGenerator digits =
+    let
+        min =
+            10 ^ (digits - 1)
+
+        max =
+            10 ^ digits - 1
+    in
+        int min max
 
 
 initialModel : Model
