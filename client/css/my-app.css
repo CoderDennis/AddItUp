@@ -21,6 +21,13 @@
   width: 100%;
 }
 
+input[type="number"]{
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+    padding: 0;
+}
+
 @media all and (min-width: 375px) {
   /* iPhone 6 */
   .number {

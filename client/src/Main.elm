@@ -90,7 +90,6 @@ viewNumbers model =
                 [ input
                     [ class "number"
                     , type_ "number"
-                    , autofocus True
                     , onInput Answer
                     , value model.answer
                     ]
