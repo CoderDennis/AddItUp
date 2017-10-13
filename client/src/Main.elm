@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, href, autofocus, type_, value)
+import Html.Attributes exposing (class, href, autofocus, type_)
 import Html.Attributes.Aria exposing (ariaPressed)
 import Html.Events exposing (onClick, onInput)
 import Random exposing (..)
@@ -52,7 +52,7 @@ view model =
 viewStart : Model -> Html Msg
 viewStart model =
     div []
-        [ h1 [ class "center" ]
+        [ h1 []
             [ text "Add It Up!" ]
         , div []
             [ text "How many digits in each number?" ]
@@ -77,27 +77,20 @@ viewStart model =
 
 viewNumbers : Model -> Html Msg
 viewNumbers model =
-    div [ class "page-content" ]
-        [ div [ class "content-block-title" ]
+    div []
+        [ div []
             [ text "Add these numbers" ]
-        , div [ class "content-block" ]
-            [ div [ class "content-block-inner" ]
-                (model.numbers |> List.map viewNumber)
-            ]
-        , div [ class "content-block-title" ]
+        , div []
+            (model.numbers |> List.map viewNumber)
+        , div []
             [ text "Answer" ]
-        , div [ class "content-block" ]
-            [ div [ class "content-block-inner number" ]
-                [ input
-                    [ class "number"
-                    , type_ "number"
-                    , onInput Answer
-                    , value model.answer
-                    ]
-                    []
-                ]
+        , div []
+            [ div [ class "number" ]
+                [ text model.answer ]
             ]
-        , div [ class "content-block-title" ]
+        , div [ class "row justify-content-center" ]
+            [ viewAnswerButtons ]
+        , div []
             [ (viewCheckButton model) ]
         ]
 
@@ -116,9 +109,9 @@ viewCheckButton model =
                 Correct ->
                     ( StartOver, "Correct! Play Again" )
     in
-        a
-            [ href "#"
-            , class "button button-big button-fill"
+        button
+            [ type_ "button"
+            , class "but btn-primary btn-lg btn-block"
             , onClick nextMsg
             ]
             [ text buttonText ]
@@ -256,6 +249,22 @@ viewNumberCountButtonPressed n =
         ]
 
 
+viewAnswerButtons =
+    div
+        [ class "btn-group" ]
+        ((List.range 0 9)
+            |> List.map viewAnswerButton
+        )
+
+
+viewAnswerButton n =
+    button
+        [ type_ "button"
+        , class "btn btn-primary"
+        ]
+        [ text (toString n) ]
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -325,7 +334,7 @@ initialModel =
     , digits = 7
     , numberCount = 7
     , numbers = []
-    , answer = ""
+    , answer = "0"
     , check = NotChecked
     }
 
