@@ -13,7 +13,7 @@ type alias Model =
     , digits : Int
     , numberCount : Int
     , numbers : List Int
-    , answer : String
+    , answer : Int
     , check : Check
     }
 
@@ -23,7 +23,7 @@ type Msg
     | SetNumberCount Int
     | Play
     | SetNumbers (List Int)
-    | Answer String
+    | AppendToAnswer String
     | CheckAnswer
     | StartOver
 
@@ -86,7 +86,7 @@ viewNumbers model =
             [ text "Answer" ]
         , div []
             [ div [ class "number" ]
-                [ text model.answer ]
+                [ text (prettyInt model.answer) ]
             ]
         , div [ class "row justify-content-center" ]
             [ viewAnswerButtons ]
@@ -261,6 +261,7 @@ viewAnswerButton n =
     button
         [ type_ "button"
         , class "btn btn-primary"
+        , onClick (AppendToAnswer (toString n))
         ]
         [ text (toString n) ]
 
@@ -285,8 +286,15 @@ update msg model =
             , Cmd.none
             )
 
-        Answer a ->
-            ( { model | answer = a }, Cmd.none )
+        AppendToAnswer a ->
+            let
+                answerString =
+                    (toString model.answer) ++ a
+
+                answerInt =
+                    Result.withDefault 0 (String.toInt answerString)
+            in
+                ( { model | answer = answerInt }, Cmd.none )
 
         CheckAnswer ->
             let
@@ -294,7 +302,7 @@ update msg model =
                     List.sum model.numbers
 
                 check =
-                    if (toString ans) == model.answer then
+                    if ans == model.answer then
                         Correct
                     else
                         Incorrect
@@ -304,7 +312,7 @@ update msg model =
         StartOver ->
             ( { model
                 | screen = Start
-                , answer = ""
+                , answer = 0
                 , check = NotChecked
               }
             , Cmd.none
@@ -334,7 +342,7 @@ initialModel =
     , digits = 7
     , numberCount = 7
     , numbers = []
-    , answer = "0"
+    , answer = 0
     , check = NotChecked
     }
 
