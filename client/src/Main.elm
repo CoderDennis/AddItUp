@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, href, autofocus, type_, value)
+import Html.Attributes.Aria exposing (ariaPressed)
 import Html.Events exposing (onClick, onInput)
 import Random exposing (..)
 import String exposing (..)
@@ -50,26 +51,26 @@ view model =
 
 viewStart : Model -> Html Msg
 viewStart model =
-    div [ class "page-content" ]
-        [ div [ class "content-block-title" ]
+    div []
+        [ h1 [ class "center" ]
+            [ text "Add It Up!" ]
+        , div []
             [ text "How many digits in each number?" ]
-        , div [ class "content-block" ]
-            [ div [ class "content-block-inner" ]
-                (viewDigitsButtons model)
-            ]
-        , div [ class "content-block-title" ]
+        , div [ class "row justify-content-center" ]
+            (viewDigitsButtons model)
+        , div []
             [ text "How many numbers?" ]
-        , div [ class "content-block" ]
-            [ div [ class "content-block-inner" ]
-                (viewNumberCountButtons model)
-            ]
-        , div [ class "content-block-title" ]
-            [ a
-                [ href "#"
-                , class "button button-big button-fill"
-                , onClick Play
+        , div [ class "row justify-content-center" ]
+            (viewNumberCountButtons model)
+        , div [ class "row" ]
+            [ div [ class "col" ]
+                [ button
+                    [ type_ "button"
+                    , class "but btn-primary btn-lg btn-block"
+                    , onClick Play
+                    ]
+                    [ text "Play" ]
                 ]
-                [ text "Play" ]
             ]
         ]
 
@@ -183,19 +184,32 @@ viewDigitsButtons model =
 
 viewDigitsButton : Model -> Int -> Html Msg
 viewDigitsButton model n =
-    let
-        classes =
-            if model.digits == n then
-                "button button-big button-inline"
-            else
-                "button button-big button-fill button-inline"
-    in
-        a
-            [ href "#"
-            , class classes
+    if model.digits == n then
+        viewDigitsButtonPressed n
+    else
+        viewDigitsButtonNormal n
+
+
+viewDigitsButtonNormal n =
+    div [ class "col-xs" ]
+        [ button
+            [ type_ "button"
+            , class "btn btn-outline-primary btn-lg"
             , onClick (SetDigits n)
             ]
             [ text (digitButtonText n) ]
+        ]
+
+
+viewDigitsButtonPressed n =
+    div [ class "col-xs" ]
+        [ button
+            [ type_ "button"
+            , class "btn btn-outline-primary btn-lg active"
+            , ariaPressed True
+            ]
+            [ text (digitButtonText n) ]
+        ]
 
 
 digitButtonText : Int -> String
@@ -214,19 +228,32 @@ viewNumberCountButtons model =
 
 viewNumberCountButton : Model -> Int -> Html Msg
 viewNumberCountButton model n =
-    let
-        classes =
-            if model.numberCount == n then
-                "button button-big button-inline"
-            else
-                "button button-big button-fill button-inline"
-    in
-        a
-            [ href "#"
-            , class classes
+    if model.numberCount == n then
+        viewNumberCountButtonPressed n
+    else
+        viewNumberCountButtonNormal n
+
+
+viewNumberCountButtonNormal n =
+    div [ class "col-xs" ]
+        [ button
+            [ type_ "button"
+            , class "btn btn-outline-primary btn-lg"
             , onClick (SetNumberCount n)
             ]
             [ text ((toString n) ++ " Numbers") ]
+        ]
+
+
+viewNumberCountButtonPressed n =
+    div [ class "col-xs" ]
+        [ button
+            [ type_ "button"
+            , class "btn btn-outline-primary btn-lg active"
+            , ariaPressed True
+            ]
+            [ text ((toString n) ++ " Numbers") ]
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

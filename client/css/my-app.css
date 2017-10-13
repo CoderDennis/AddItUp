@@ -1,31 +1,15 @@
-.navbar .center {
-  margin: auto;
+.col-xs {
+  padding: 5px;
 }
 
-.button-inline {
-  display: inline-block;
-  margin: 5px;
-}
-
-.content-block-title {
-  margin-top: 10px;
-}
-
-.content-block {
-  margin: 0px;
+.row {
+  padding-bottom: 15px;
 }
 
 .number {
   text-align: right;
   font-size: 30px;
   width: 100%;
-}
-
-input[type="number"]{
-   -moz-box-sizing:    border-box;
-   -webkit-box-sizing: border-box;
-    box-sizing:        border-box;
-    padding: 0;
 }
 
 @media all and (min-width: 375px) {
