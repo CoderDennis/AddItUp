@@ -24,6 +24,7 @@ type Msg
     | Play
     | SetNumbers (List Int)
     | AppendToAnswer String
+    | Backspace
     | CheckAnswer
     | StartOver
 
@@ -93,7 +94,10 @@ viewNumbers model =
                 [ div [ class "number" ]
                     [ text (prettyInt model.answer) ]
                 ]
-            , div [ class "col-1" ]
+            , div
+                [ class "col-1"
+                , onClick Backspace
+                ]
                 [ text "<" ]
             ]
         , div [ class "row justify-content-center" ]
@@ -298,6 +302,18 @@ update msg model =
             let
                 answerString =
                     (toString model.answer) ++ a
+
+                answerInt =
+                    Result.withDefault 0 (String.toInt answerString)
+            in
+                ( { model | answer = answerInt }, Cmd.none )
+
+        Backspace ->
+            let
+                answerString =
+                    model.answer
+                        |> toString
+                        |> slice 0 -1
 
                 answerInt =
                     Result.withDefault 0 (String.toInt answerString)
