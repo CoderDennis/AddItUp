@@ -181,6 +181,7 @@ chunksOfRight k s =
             [ s ]
 
 
+viewDigitsButtons : Model -> List (Html Msg)
 viewDigitsButtons model =
     ((List.range 2 7)
         |> List.map (viewDigitsButton model)
@@ -195,6 +196,7 @@ viewDigitsButton model n =
         viewDigitsButtonNormal n
 
 
+viewDigitsButtonNormal : Int -> Html Msg
 viewDigitsButtonNormal n =
     div [ class "col-xs" ]
         [ button
@@ -206,6 +208,7 @@ viewDigitsButtonNormal n =
         ]
 
 
+viewDigitsButtonPressed : Int -> Html Msg
 viewDigitsButtonPressed n =
     div [ class "col-xs" ]
         [ button
@@ -225,6 +228,7 @@ digitButtonText n =
         (toString n) ++ " Digits"
 
 
+viewNumberCountButtons : Model -> List (Html Msg)
 viewNumberCountButtons model =
     ((List.range 2 7)
         |> List.map (viewNumberCountButton model)
@@ -239,6 +243,7 @@ viewNumberCountButton model n =
         viewNumberCountButtonNormal n
 
 
+viewNumberCountButtonNormal : Int -> Html Msg
 viewNumberCountButtonNormal n =
     div [ class "col-xs" ]
         [ button
@@ -250,6 +255,7 @@ viewNumberCountButtonNormal n =
         ]
 
 
+viewNumberCountButtonPressed : Int -> Html Msg
 viewNumberCountButtonPressed n =
     div [ class "col-xs" ]
         [ button
@@ -261,6 +267,7 @@ viewNumberCountButtonPressed n =
         ]
 
 
+viewAnswerButtons : Html Msg
 viewAnswerButtons =
     div
         [ class "btn-group" ]
@@ -269,6 +276,7 @@ viewAnswerButtons =
         )
 
 
+viewAnswerButton : Int -> Html Msg
 viewAnswerButton n =
     button
         [ type_ "button"
@@ -371,6 +379,7 @@ initialModel =
     }
 
 
+main : Program Never Model Msg
 main =
     Html.program
         { init = ( initialModel, Cmd.none )
