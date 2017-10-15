@@ -318,26 +318,15 @@ update msg model =
             )
 
         AppendToAnswer a ->
-            let
-                answerString =
-                    (toString model.answer) ++ a
-
-                answerInt =
-                    Result.withDefault 0 (String.toInt answerString)
-            in
-                ( { model | answer = answerInt }, Cmd.none )
+            (toString model.answer)
+                ++ a
+                |> setAnswer model
 
         Backspace ->
-            let
-                answerString =
-                    model.answer
-                        |> toString
-                        |> slice 0 -1
-
-                answerInt =
-                    Result.withDefault 0 (String.toInt answerString)
-            in
-                ( { model | answer = answerInt }, Cmd.none )
+            model.answer
+                |> toString
+                |> slice 0 -1
+                |> setAnswer model
 
         CheckAnswer ->
             let
@@ -360,6 +349,20 @@ update msg model =
               }
             , Cmd.none
             )
+
+
+setAnswer : Model -> String -> ( Model, Cmd Msg )
+setAnswer model answerString =
+    let
+        answerInt =
+            Result.withDefault 0 (String.toInt answerString)
+    in
+        ( { model
+            | answer = answerInt
+            , check = NotChecked
+          }
+        , Cmd.none
+        )
 
 
 numberListGenerator : Model -> Generator (List Int)
