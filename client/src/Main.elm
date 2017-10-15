@@ -3,9 +3,10 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, href, autofocus, type_)
 import Html.Attributes.Aria exposing (ariaPressed)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onWithOptions)
 import Random exposing (..)
 import String exposing (..)
+import Json.Decode exposing (succeed)
 
 
 type alias Model =
@@ -110,7 +111,7 @@ viewBackspaceButton model =
     if model.answer > 0 then
         [ a
             [ href "#"
-            , onClick Backspace
+            , onClickPreventDefault Backspace
             ]
             [ text "⌫" ]
         ]
@@ -380,6 +381,11 @@ numberGenerator digits =
             10 ^ digits - 1
     in
         int min max
+
+
+onClickPreventDefault : msg -> Attribute msg
+onClickPreventDefault message =
+    onWithOptions "click" { stopPropagation = True, preventDefault = True } (succeed message)
 
 
 initialModel : Model
