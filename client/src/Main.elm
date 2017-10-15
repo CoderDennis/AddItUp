@@ -95,16 +95,27 @@ viewNumbers model =
                     [ text (prettyInt model.answer) ]
                 ]
             , div
-                [ class "col-1"
-                , onClick Backspace
-                ]
-                [ text "<" ]
+                [ class "col-1 backspace" ]
+                (viewBackspaceButton model)
             ]
         , div [ class "row justify-content-center" ]
             [ viewAnswerButtons ]
         , div []
             [ (viewCheckButton model) ]
         ]
+
+
+viewBackspaceButton : Model -> List (Html Msg)
+viewBackspaceButton model =
+    if model.answer > 0 then
+        [ a
+            [ href "#"
+            , onClick Backspace
+            ]
+            [ text "⌫" ]
+        ]
+    else
+        []
 
 
 viewCheckButton : Model -> Html Msg

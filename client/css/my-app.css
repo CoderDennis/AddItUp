@@ -17,6 +17,16 @@
   padding: .6rem;
 }
 
+div .backspace {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+div .backspace a {
+  margin-left: -20px;
+  text-decoration: none;
+}
+
 @media all and (min-width: 375px) {
   /* iPhone 6 */
   .number {
