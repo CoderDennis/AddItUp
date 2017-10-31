@@ -7,6 +7,7 @@ import Html.Events exposing (onClick, onWithOptions)
 import Random exposing (..)
 import String exposing (..)
 import Json.Decode exposing (succeed)
+import Number.Format exposing (prettyInt)
 
 
 type alias Model =
@@ -93,7 +94,7 @@ viewNumbers model =
                 [ text "Answer" ]
             , div [ class "col" ]
                 [ div [ class "number" ]
-                    [ text (prettyInt model.answer) ]
+                    [ text (prettyInt ',' model.answer) ]
                 ]
             , div
                 [ class "col-1 backspace" ]
@@ -144,53 +145,7 @@ viewCheckButton model =
 viewNumber : Int -> Html Msg
 viewNumber n =
     div [ class "number" ]
-        [ text (prettyInt n) ]
-
-
-{-| From <https://github.com/avh4/elm-number-format/blob/master/src/Number/Format.elm>
-That package hasn't been updated to Elm 0.18 yet, so just copied the function and
-modified it a bit.
--}
-prettyInt : Int -> String
-prettyInt n =
-    let
-        ni =
-            abs n
-
-        nis =
-            String.join (String.fromChar ',') (chunksOfRight 3 <| toString ni)
-    in
-        if n < 0 then
-            String.cons '-' nis
-        else
-            nis
-
-
-{-| From <https://github.com/circuithub/elm-string-split/blob/1.0.3/src/String/Split.elm>
-That package hasn't been updated to Elm 0.18 yet, so just copied the function and
-modified to work -- removed ' in var name.
--}
-chunksOfRight : Int -> String -> List String
-chunksOfRight k s =
-    let
-        len =
-            length s
-
-        k2 =
-            2 * k
-
-        chunksOfR s_ =
-            if length s_ > k2 then
-                right k s_ :: chunksOfR (dropRight k s_)
-            else
-                right k s_ :: [ dropRight k s_ ]
-    in
-        if len > k2 then
-            List.reverse (chunksOfR s)
-        else if len > k then
-            dropRight k s :: [ right k s ]
-        else
-            [ s ]
+        [ text (prettyInt ',' n) ]
 
 
 viewDigitsButtons : Model -> List (Html Msg)
